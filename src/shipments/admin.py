@@ -1,14 +1,15 @@
 from django.contrib import admin
-from .models import Guide, StatusChange
+from .models import Guia, Estatus, Usuario
 
-@admin.register(Guide)
-class GuideAdmin(admin.ModelAdmin):
-    list_display = ("number", "status", "created_at")
-    list_filter = ("status",)
-    search_fields = ("number",)
+@admin.register(Guia)
+class GuiaAdmin(admin.ModelAdmin):
+    list_display = ('trackingNumber', 'currentStatus', 'createdAt')
 
-@admin.register(StatusChange)
-class StatusChangeAdmin(admin.ModelAdmin):
-    list_display = ("guide", "previous", "new", "timestamp")
-    list_filter = ("previous", "new")
-    search_fields = ("guide__number",)
+@admin.register(Estatus)
+class EstatusAdmin(admin.ModelAdmin):
+    list_display = ('guia', 'status', 'timestamp', 'updatedBy')
+    list_filter = ('status',)
+
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'createdAt')

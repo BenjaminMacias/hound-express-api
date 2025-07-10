@@ -1,26 +1,45 @@
 from django.db import models
+from django.utils import timezone
 
-class Guide(models.Model):
-    number = models.CharField(max_length=100, unique=True)
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('PENDING',    'Pendiente'),
-            ('IN_TRANSIT', 'En tránsito'),
-            ('DELIVERED',  'Entregado'),
-        ],
-        default='PENDING'
+class Guia(models.Model):
+    id = models.AutoField(primary_key=True)
+    trackingNumber = models.CharField(max_length=15)
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
+    createdAt = models.DateTimeField(default=timezone.now)
+    updatedAt = models.DateTimeField(default=timezone.now)
+    currentStatus = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.trackingNumber
+
+class Estatus(models.Model):  # <--- renombrada
+    id = models.AutoField(primary_key=True)
+    guia = models.ForeignKey(
+        Guia,
+        on_delete=models.CASCADE,
+        related_name="estatuses",
+        db_column="guideId",            # coincide con la práctica
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20)
+    timestamp = models.DateTimeField(default=timezone.now)
+    updatedBy = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = 'StatusHistory'       # nombre de tabla según práctica
+        verbose_name = 'Estatus'         # singular en Admin
+        verbose_name_plural = 'Estatus'  # plural (sin “s” extra)
 
     def __str__(self):
-        return self.number
+        return f"{self.guia.trackingNumber} – {self.status}"
 
-class StatusChange(models.Model):
-    guide = models.ForeignKey(Guide, related_name='history', on_delete=models.CASCADE)
-    previous = models.CharField(max_length=20)
-    new = models.CharField(max_length=20)
-    timestamp = models.DateTimeField(auto_now_add=True)
+class Usuario(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=20)
+    createdAt = models.DateTimeField(default=timezone.now)
+    updatedAt = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.guide.number}: {self.previous} → {self.new}"
+        return self.name
