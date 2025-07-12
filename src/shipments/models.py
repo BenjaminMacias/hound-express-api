@@ -7,28 +7,29 @@ class Guia(models.Model):
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     createdAt = models.DateTimeField(default=timezone.now)
-    updatedAt = models.DateTimeField(default=timezone.now)
+    updatedAt = models.DateTimeField(auto_now=True)
     currentStatus = models.CharField(max_length=20)
+    recipient = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.trackingNumber
 
-class Estatus(models.Model):  # <--- renombrada
+class Estatus(models.Model):
     id = models.AutoField(primary_key=True)
     guia = models.ForeignKey(
         Guia,
         on_delete=models.CASCADE,
         related_name="estatuses",
-        db_column="guideId",            # coincide con la práctica
+        db_column="guideId",
     )
     status = models.CharField(max_length=20)
     timestamp = models.DateTimeField(default=timezone.now)
     updatedBy = models.CharField(max_length=20)
 
     class Meta:
-        db_table = 'StatusHistory'       # nombre de tabla según práctica
-        verbose_name = 'Estatus'         # singular en Admin
-        verbose_name_plural = 'Estatus'  # plural (sin “s” extra)
+        db_table = 'StatusHistory'
+        verbose_name = 'Estatus'
+        verbose_name_plural = 'Estatus'
 
     def __str__(self):
         return f"{self.guia.trackingNumber} – {self.status}"

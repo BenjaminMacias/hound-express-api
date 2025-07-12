@@ -36,6 +36,7 @@ ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 
 # Application definitions
 INSTALLED_APPS = [
+    "corsheaders",  #  < --- activar las cors
     "pages.apps.PagesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -45,9 +46,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "shipments.apps.ShipmentsConfig",   #<-- carga explícita desde apps.py
     "rest_framework",   # <-- 
+
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  #< -- CORS
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo. Usa CORS_ALLOWED_ORIGINS en producción.
 
 if not TESTING:
     INSTALLED_APPS = [*INSTALLED_APPS, "debug_toolbar"]
