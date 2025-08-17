@@ -1,3 +1,164 @@
+# Hound Express API
+
+## Descripción del proyecto
+API base desarrollada con **Django** y **Django REST Framework** para exponer servicios REST de forma rápida. Incluye configuración para correr en local con Docker o sin Docker (virtualenv), conexión a **PostgreSQL** y compatibilidad con autenticación por **DRF Token Auth**.
+
+---
+
+## Tecnologías utilizadas
+- **Python 3 / Django**
+- **Django REST Framework**
+- **PostgreSQL**
+- **Docker & Docker Compose** (opcional)
+- **Redis + Celery** (opcional, si habilitas tareas asíncronas)
+- **Nginx** (opcional para despliegue)
+
+---
+
+## Instrucciones de instalación y uso
+
+### Opción A — Con Docker (recomendada)
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/BenjaminMacias/hound-express-api.git
+   cd hound-express-api
+Copia variables de entorno y edítalas:
+
+bash
+Copiar
+Editar
+cp .env.example .env
+# Abre .env y ajusta SECRET_KEY, DB_* etc.
+Levanta los servicios:
+
+bash
+Copiar
+Editar
+docker compose up --build
+# o en segundo plano:
+# docker compose up -d --build
+Ejecuta migraciones y crea superusuario:
+
+bash
+Copiar
+Editar
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+Acceso:
+
+App: http://localhost:8000/
+
+Admin: http://localhost:8000/admin/
+
+Opción B — Sin Docker (entorno virtual)
+Clona el repositorio:
+
+bash
+Copiar
+Editar
+git clone https://github.com/BenjaminMacias/hound-express-api.git
+cd hound-express-api
+Crea y activa entorno virtual:
+
+bash
+Copiar
+Editar
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS/Linux
+# source .venv/bin/activate
+Instala dependencias:
+
+bash
+Copiar
+Editar
+pip install -r requirements.txt
+Variables de entorno:
+
+bash
+Copiar
+Editar
+cp .env.example .env
+# Edita .env con tus valores locales
+Migraciones, superusuario y servidor:
+
+bash
+Copiar
+Editar
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver 0.0.0.0:8000
+Acceso:
+
+App: http://localhost:8000/
+
+Admin: http://localhost:8000/admin/
+
+Ejemplos de uso
+Las rutas concretas dependen de tus apps/urls. Ajusta si tu proyecto expone endpoints distintos.
+
+Health / Root
+bash
+Copiar
+Editar
+curl -i http://localhost:8000/
+# o, si existe:
+curl -i http://localhost:8000/health/
+Admin de Django
+Crea un superusuario (ver instalación)
+
+Abre http://localhost:8000/admin/
+
+API (DRF)
+bash
+Copiar
+Editar
+curl -s http://localhost:8000/api/ | jq .
+Autenticación por Token (DRF Token Auth)
+Obtener token:
+
+bash
+Copiar
+Editar
+curl -X POST http://localhost:8000/api/api-token-auth/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"TU_USUARIO","password":"TU_PASSWORD"}'
+Usar token en endpoints protegidos:
+
+bash
+Copiar
+Editar
+curl http://localhost:8000/api/tu-endpoint/ \
+  -H "Authorization: Token TU_TOKEN"
+Licencia
+Este proyecto se distribuye bajo la licencia MIT. Revisa el archivo LICENSE si está disponible.
+
+makefile
+Copiar
+Editar
+::contentReference[oaicite:0]{index=0}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 🐳 An example Django + Docker app
 
 You could use this example app as a base for your new project or as a guide to
